@@ -25,19 +25,6 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
-/*
-    @Bean
-    public UserDetailsService userDetailsService(PasswordEncoder encoder) {
-        String password = encoder.encode("pass");
-        UserDetails userDetails = User.withUsername("user")
-                .password(password)
-                .roles("ADMIN")
-                .build();
-
-        return new InMemoryUserDetailsManager(userDetails);
-    }
-*/
-
 
 
 //

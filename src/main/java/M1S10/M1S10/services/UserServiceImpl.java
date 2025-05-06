@@ -4,6 +4,7 @@ import M1S10.M1S10.Mapper.UserMapper;
 import M1S10.M1S10.dtos.UserRequestDto;
 import M1S10.M1S10.dtos.UserResponseDto;
 import M1S10.M1S10.entities.UserEntity;
+import M1S10.M1S10.enums.UserStatus;
 import M1S10.M1S10.repositories.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,6 +18,8 @@ import java.util.Optional;
 @AllArgsConstructor
 public class UserServiceImpl implements UserService{
 
+    private static final String DEFAULT_USER = "root";
+    private static final String DEFAULT_PASSWORD ="admin";
     private final PasswordEncoder encoder;
     private final UserRepository repository;
 
@@ -60,6 +63,13 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return repository.findByUsername(username).orElseThrow();
+        Optional<UserEntity> user = repository.findByUsername(username);
+         if(user.isPresent()){
+             return user.get();
+         }
+         if (username.equals(DEFAULT_USER)){
+             return UserEntity.builder().id(0L).username("root").password(encoder.encode(DEFAULT_PASSWORD)).profile(UserStatus.ADMIN).build();
+         }
+        throw new UsernameNotFoundException(username);
     }
 }
